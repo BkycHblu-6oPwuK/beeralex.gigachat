@@ -1,12 +1,12 @@
 <?php
-
+declare(strict_types=1);
 namespace Beeralex\Gigachat\Services;
 
+use Beeralex\Core\Exceptions\ApiClientUnauthorizedException;
 use Bitrix\Main\Web\Json;
 use Bitrix\Main\Web\Uri;
 use Beeralex\Gigachat\Entity\Chat\Chat;
 use Beeralex\Gigachat\Entity\Chat\ChatParam;
-use Beeralex\Gigachat\Exceptions\ClientUnathorizedException;
 
 /**
  * @link https://developers.sber.ru/docs/ru/gigachat/api/reference/rest/post-chat
@@ -14,7 +14,7 @@ use Beeralex\Gigachat\Exceptions\ClientUnathorizedException;
  */
 class ChatService extends AuthService
 {
-    private ChatParam $params;
+    protected ChatParam $params;
 
     /**
      * @param string $userPromt сообщение пользователя
@@ -25,19 +25,19 @@ class ChatService extends AuthService
         $this->params = $params;
         try {
             $result = $this->makeRequest();
-        } catch (ClientUnathorizedException $e) {
+        } catch (ApiClientUnauthorizedException $e) {
             $this->refreshToken();
             $result = $this->makeRequest();
         }
         return new Chat($result);
     }
 
-    private function makeRequest()
+    protected function makeRequest()
     {
         return $this->post(new Uri("{$this->options->baseGigaChatUrl}/api/v1/chat/completions"), $this->getData(), $this->getHeaders());
     }
 
-    private function getHeaders(): array
+    protected function getHeaders(): array
     {
         return [
             'Content-Type' => 'application/json',
@@ -47,7 +47,7 @@ class ChatService extends AuthService
         ];
     }
 
-    private function getDefaultModel(): string
+    protected function getDefaultModel(): string
     {
         $model = $this->options->defaultModel;
         if (!$model) {
@@ -56,7 +56,7 @@ class ChatService extends AuthService
         return $model;
     }
 
-    private function getData(): string
+    protected function getData(): string
     {
         $messages = [];
         $params = [

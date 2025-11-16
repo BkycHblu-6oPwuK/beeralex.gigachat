@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Beeralex\Gigachat;
 
 use Beeralex\Core\Config\AbstractOptions;
@@ -11,6 +11,7 @@ final class Options extends AbstractOptions
     public readonly string $baseOauthUrl;
     public readonly string $baseGigaChatUrl;
     public readonly string $defaultModel;
+    public readonly bool $certEnable;
     public readonly bool $logsEnable;
 
     protected function mapOptions(array $options): void
@@ -21,6 +22,7 @@ final class Options extends AbstractOptions
         $this->baseGigaChatUrl = $options['base_gigachat_url'] ?? '';
         $this->logsEnable = ($options['logs_enable'] ?? '') === 'Y';
         $this->defaultModel = $options['gigachat_model'] ?? '';
+        $this->certEnable = ($options['cert_enable'] ?? '') === 'Y';
     }
 
     protected function validateOptions(): void

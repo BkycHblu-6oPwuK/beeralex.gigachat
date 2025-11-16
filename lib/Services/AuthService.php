@@ -1,11 +1,10 @@
 <?php
-
+declare(strict_types=1);
 namespace Beeralex\Gigachat\Services;
 
 use Bitrix\Main\Web\Uri;
 use Beeralex\Core\Dto\CacheSettingsDto;
-use Beeralex\Core\Helpers\WebHelper;
-use Psr\Log\LoggerInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @link https://developers.sber.ru/docs/ru/gigachat/api/reference/rest/post-token
@@ -15,9 +14,9 @@ class AuthService extends ApiService
     private ?string $token = null;
     private CacheSettingsDto $cacheSettings;
 
-    public function __construct(?LoggerInterface $logger = null)
+    public function __construct()
     {
-        parent::__construct($logger);
+        parent::__construct();
         $this->cacheSettings = new CacheSettingsDto(1800, 'gigachat_access_token', '/gigachat/token');
     }
 
@@ -76,7 +75,7 @@ class AuthService extends ApiService
         return [
             'Content-Type' => 'application/x-www-form-urlencoded',
             'Accept' => 'application/json',
-            'RqUID' => WebHelper::getUuidV4(),
+            'RqUID' => Uuid::v4()->toString(),
             'Authorization' => "Basic {$this->options->authorizationKey}",
         ];
     }

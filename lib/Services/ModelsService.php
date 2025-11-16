@@ -1,23 +1,22 @@
 <?php
-
+declare(strict_types=1);
 namespace Beeralex\Gigachat\Services;
 
 use Bitrix\Main\Web\Uri;
 use Beeralex\Core\Dto\CacheSettingsDto;
+use Beeralex\Core\Exceptions\ApiClientUnauthorizedException;
 use Beeralex\Gigachat\Entity\Models\Models;
-use Beeralex\Gigachat\Exceptions\ClientUnathorizedException;
-use Psr\Log\LoggerInterface;
 
 /**
  * @link https://developers.sber.ru/docs/ru/gigachat/api/reference/rest/get-models
  */
 class ModelsService extends AuthService
 {
-    private CacheSettingsDto $cacheSettings;
+    protected CacheSettingsDto $cacheSettings;
 
-    public function __construct(?LoggerInterface $logger = null)
+    public function __construct()
     {
-        parent::__construct($logger);
+        parent::__construct();
         $this->cacheSettings = new CacheSettingsDto(1800, 'gigachat_models', '/gigachat/models');
     }
 
@@ -29,7 +28,7 @@ class ModelsService extends AuthService
     {
         try {
             $result = $this->makeRequest();
-        } catch (ClientUnathorizedException $e){
+        } catch (ApiClientUnauthorizedException $e){
             $this->refreshToken();
             $result = $this->makeRequest();
         }
@@ -39,12 +38,12 @@ class ModelsService extends AuthService
         return new Models($result);
     }
 
-    private function makeRequest()
+    protected function makeRequest()
     {
         return $this->get(new Uri("{$this->options->baseGigaChatUrl}/api/v1/models"), null, $this->getHeaders(), $this->cacheSettings);
     }
 
-    private function getHeaders(): array
+    protected function getHeaders(): array
     {
         return [
             'Accept' => 'application/json',

@@ -1,11 +1,11 @@
 <?php
-
+declare(strict_types=1);
 namespace Beeralex\Gigachat\Services;
 
+use Beeralex\Core\Exceptions\ApiClientUnauthorizedException;
 use Bitrix\Main\Web\Json;
 use Bitrix\Main\Web\Uri;
 use Beeralex\Gigachat\Entity\Embedding\Embeddings;
-use Beeralex\Gigachat\Exceptions\ClientUnathorizedException;
 
 /**
  * @link https://developers.sber.ru/docs/ru/gigachat/api/reference/rest/post-embeddings
@@ -21,7 +21,7 @@ class EmbeddingService extends AuthService
         $promt = array_values($promt);
         try {
             $result = $this->makeRequest($promt);
-        } catch (ClientUnathorizedException $e){
+        } catch (ApiClientUnauthorizedException $e){
             $this->refreshToken();
             $result = $this->makeRequest($promt);
         }
@@ -31,12 +31,12 @@ class EmbeddingService extends AuthService
         return new Embeddings($result);
     }
 
-    private function makeRequest(array $promt)
+    protected function makeRequest(array $promt)
     {
         return $this->post(new Uri("{$this->options->baseGigaChatUrl}/api/v1/embeddings"), $this->getData($promt), $this->getHeaders());
     }
 
-    private function getHeaders(): array
+    protected function getHeaders(): array
     {
         return [
             'Content-Type' => 'application/json',
@@ -45,7 +45,7 @@ class EmbeddingService extends AuthService
         ];
     }
 
-    private function getData(array $promt): string
+    protected function getData(array $promt): string
     {
         return Json::encode([
             'model' => 'Embeddings',
