@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Beeralex\Gigachat\Services;
 
 use Bitrix\Main\Web\Uri;
-use Beeralex\Core\Dto\CacheSettingsDto;
+use Beeralex\Core\Dto\CacheSettingsDTO;
 use Beeralex\Core\Exceptions\ApiClientUnauthorizedException;
 use Beeralex\Gigachat\Entity\Models\Models;
 
@@ -12,12 +12,12 @@ use Beeralex\Gigachat\Entity\Models\Models;
  */
 class ModelsService extends AuthService
 {
-    protected CacheSettingsDto $cacheSettings;
+    protected CacheSettingsDTO $cacheSettings;
 
     public function __construct()
     {
         parent::__construct();
-        $this->cacheSettings = new CacheSettingsDto(1800, 'gigachat_models', '/gigachat/models');
+        $this->cacheSettings = new CacheSettingsDTO(1800, 'gigachat_models', '/gigachat/models');
     }
 
     /**

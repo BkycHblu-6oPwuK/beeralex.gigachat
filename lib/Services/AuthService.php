@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Beeralex\Gigachat\Services;
 
 use Bitrix\Main\Web\Uri;
-use Beeralex\Core\Dto\CacheSettingsDto;
+use Beeralex\Core\Dto\CacheSettingsDTO;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -12,12 +12,12 @@ use Symfony\Component\Uid\Uuid;
 class AuthService extends ApiService
 {
     private ?string $token = null;
-    private CacheSettingsDto $cacheSettings;
+    private CacheSettingsDTO $cacheSettings;
 
     public function __construct()
     {
         parent::__construct();
-        $this->cacheSettings = new CacheSettingsDto(1800, 'gigachat_access_token', '/gigachat/token');
+        $this->cacheSettings = new CacheSettingsDTO(1800, 'gigachat_access_token', '/gigachat/token');
     }
 
     /** 
